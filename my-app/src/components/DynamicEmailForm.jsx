@@ -1,31 +1,20 @@
-# Dynamic Form Field Management
-
-## Problem Statement
-
-Design a form that allows users to add multiple "email" fields dynamically. Implement the following features:
-
-* A "Add Email" button that appends a new email input field.
-* Use `useState` to track and display all entered email addresses below the form in real time.
-* Validate that each email field contains a properly formatted email address.
-* Display errors for invalid fields.
-
-## Solution (React Code)
-
-```jsx
 import React, { useState } from "react";
 
 function DynamicEmailForm() {
   const [emails, setEmails] = useState([{ value: "", error: "" }]);
 
+  // Regex to validate email
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
+  // Handle change in email input
   const handleEmailChange = (index, newValue) => {
     const newEmails = [...emails];
     newEmails[index].value = newValue;
 
+    // Validate
     if (newValue === "") {
       newEmails[index].error = "Email is required";
     } else if (!validateEmail(newValue)) {
@@ -37,10 +26,12 @@ function DynamicEmailForm() {
     setEmails(newEmails);
   };
 
+  // Add a new email field
   const handleAddEmail = () => {
     setEmails([...emails, { value: "", error: "" }]);
   };
 
+  // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
     const hasErrors = emails.some((email) => email.error || email.value === "");
@@ -52,7 +43,7 @@ function DynamicEmailForm() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="App" style={{ padding: "20px" }}>
       <h2>Dynamic Email Form</h2>
       <form onSubmit={handleSubmit}>
         {emails.map((emailObj, index) => (
@@ -86,12 +77,3 @@ function DynamicEmailForm() {
 }
 
 export default DynamicEmailForm;
-```
-
-## Explanation
-
-* **State**: I used `useState` to hold an array of email objects, each containing a `value` and `error`.
-* **Adding Fields**: Clicking "Add Email" appends a new empty email object to the state.
-* **Validation**: On every input change, the corresponding email is validated. If empty or invalid, an appropriate error message is set.
-* **Displaying Emails**: All entered email addresses are shown live below the form.
-* **Submission**: On submit, if any email is empty or invalid, an alert is shown to fix errors first. Otherwise, a success message is shown.
